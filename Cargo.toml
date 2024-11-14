@@ -1,0 +1,8 @@
+[package]
+name = "File-to-hex"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rfd = "0.15.0"
+device_query = "2.1.0"
