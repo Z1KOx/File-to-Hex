@@ -45,6 +45,7 @@ impl FM
         self.save_path = FileDialog::new()
             .set_file_name(&format!("{}.c", file_name))
             .add_filter("C sources (*.c)", &["c"])
+            .add_filter("C++ sources (*.cpp)", &["cpp"])
             .save_file();
 
         let mut c_file = File::create(self.save_path.as_ref().expect("No save path selected"))?;

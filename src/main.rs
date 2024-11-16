@@ -11,7 +11,7 @@ fn main()
 
     println!("[0] Exit");
     println!("[1] Select file");
-    println!("[2] Create C file");
+    println!("[2] Create C/C++ file");
 
     loop
     {
