@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rfd = "0.15.0"
+rfd = "0.15.1"
 device_query = "2.1.0"
