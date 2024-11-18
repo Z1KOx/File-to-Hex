@@ -1,13 +1,11 @@
-use std::process::Command;
 use device_query::{DeviceQuery, DeviceState, Keycode};
+use std::process::Command;
 
 mod fm;
 use fm::FM;
 
-fn clear_terminal()
-{
-    if cfg!(target_os = "windows")
-    {
+fn clear_terminal() {
+    if cfg!(target_os = "windows") {
         Command::new("cmd")
             .args(&["/C", "cls"])
             .status()
@@ -19,8 +17,7 @@ fn clear_terminal()
     }
 }
 
-fn main()
-{
+fn main() {
     let mut file_manager = FM::new();
     let device_state: DeviceState = DeviceState::new();
     let mut successfully_selected: bool = false;
@@ -28,33 +25,68 @@ fn main()
     println!("[0] Exit");
     println!("[1] Select file");
 
-    'outer: loop
-    {
+    'outer: loop {
         let keys: Vec<Keycode> = device_state.get_keys();
 
         if keys.contains(&Keycode::Key0) {
             break;
         }
 
-        if keys.contains(&Keycode::Key1)
-        {
+        if keys.contains(&Keycode::Key1) {
             file_manager.load_file();
             successfully_selected = true;
         }
 
-        if successfully_selected
-        {
+        if successfully_selected {
             clear_terminal();
             println!("[0] Exit");
-            println!("[1] Create C/C++ file");
+            println!("[1] Create C++ file");
+            println!("[2] Create C# file");
 
-            loop
-            {
+            loop {
                 let inner_keys: Vec<Keycode> = device_state.get_keys();
-                if inner_keys.contains(&Keycode::Key1)
-                {
-                    file_manager.create_c_file().expect("Can't create C file");
-                    println!("Successfully created a C file");
+                if inner_keys.contains(&Keycode::Key1) {
+                    file_manager
+                        .create_file(
+                            "cpp",
+                            &format!(
+                                "unsigned char rawData[{}] = {{\n",
+                                file_manager.get_buffer_length()
+                            ),
+                        )
+                        .expect("Failed to create file");
+
+                    clear_terminal();
+                    println!(
+                        "Successfully created a .{} file",
+                        file_manager
+                            .get_save_path()
+                            .unwrap()
+                            .extension()
+                            .unwrap()
+                            .to_str()
+                            .expect("Invalid UTF-8 in file extension")
+                    );
+
+                    break 'outer;
+                }
+
+                if inner_keys.contains(&Keycode::Key2) {
+                    file_manager
+                        .create_file("cs", &format!("byte[] rawData = {{\n"))
+                        .expect("Failed to create file");
+
+                    clear_terminal();
+                    println!(
+                        "Successfully created a .{} file",
+                        file_manager
+                            .get_save_path()
+                            .unwrap()
+                            .extension()
+                            .unwrap()
+                            .to_str()
+                            .expect("Invalid UTF-8 in file extension")
+                    );
 
                     break 'outer;
                 }
